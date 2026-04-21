@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Fetching variables from .env
+
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
-db_host = os.getenv("DB_HOST", "localhost")  # Good practice to provide a default
+db_host = os.getenv("DB_HOST", "localhost") 
 db_name = "weather_app"
 
-# FIX: Use an f-string to insert the variables into the string
+
 SQLALCHEMY_DATABASE_URL = f"postgresql://{db_user}:{db_password}@{db_host}:5432/{db_name}"
 
 # The engine handles the connection
@@ -23,4 +23,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for models
 Base = declarative_base()
-# 1. This command scrubs 'db.env' from every single commit in your history
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
