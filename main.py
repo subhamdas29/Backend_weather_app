@@ -23,6 +23,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # In production, you'd change this to your site's URL
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
