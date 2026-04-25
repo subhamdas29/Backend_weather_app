@@ -37,7 +37,7 @@ def get_weather(city: str,  current_user: schemas.User=Depends(oauth2.get_curren
     return response.json()
 
 @app.get("/forecast")
-def get_forecast(city: str,  current_user: schemas.User=Depends(oauth2.get_current_user)):
+def get_forecast(city: str):
     
     url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric"
     response = requests.get(url)
@@ -46,7 +46,7 @@ def get_forecast(city: str,  current_user: schemas.User=Depends(oauth2.get_curre
 
 
 @app.post("/Users")
-def create_users(request: schemas.User, db: Session=Depends(get_db) , current_user: schemas.User=Depends(oauth2.get_current_user)):
+def create_users(request: schemas.User, db: Session=Depends(get_db)):
     
     new_user=models.User(username=request.username, email=request.email, password=Hash.bcrypt(request.password) , home_city=request.home_city)
     db.add(new_user)
@@ -55,7 +55,7 @@ def create_users(request: schemas.User, db: Session=Depends(get_db) , current_us
     return new_user
 
 @app.get("/Users", response_model=List[schemas.ShowUser])
-def get_users(db: Session=Depends(get_db),  current_user: schemas.User=Depends(oauth2.get_current_user)):
+def get_users(db: Session=Depends(get_db)):
     users=db.query(models.User).all()
     return users
 
